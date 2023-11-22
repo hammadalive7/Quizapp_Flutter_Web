@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants.dart';
 import '../../Login/login_screen.dart';
@@ -15,14 +16,7 @@ class LoginAndSignupBtn extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const LoginScreen();
-                },
-              ),
-            );
+            Get.offAllNamed('/LoginScreen');
           },
           child: Text(
             "Login".toUpperCase(),
@@ -31,14 +25,7 @@ class LoginAndSignupBtn extends StatelessWidget {
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const SignUpScreen();
-                },
-              ),
-            );
+            Get.offAllNamed('/SignUpScreen');
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: kPrimaryLightColor,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../constants.dart';
+import '../../../core/controller/login_controller.dart';
 import '../../Signup/signup_screen.dart';
 
 class LoginForm extends StatelessWidget {
@@ -11,10 +13,18 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginController());
+
+    void clearTextFields() {
+      controller.email.clear();
+      controller.password.clear();
+    }
+
     return Form(
       child: Column(
         children: [
           TextFormField(
+            controller: controller.email,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             cursorColor: kPrimaryColor,
@@ -30,6 +40,7 @@ class LoginForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: defaultPadding),
             child: TextFormField(
+              controller: controller.password,
               textInputAction: TextInputAction.done,
               obscureText: true,
               cursorColor: kPrimaryColor,
@@ -44,7 +55,10 @@ class LoginForm extends StatelessWidget {
           ),
           const SizedBox(height: defaultPadding),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              controller.login();
+              clearTextFields();
+            },
             child: Text(
               "Login".toUpperCase(),
             ),
@@ -52,6 +66,7 @@ class LoginForm extends StatelessWidget {
           const SizedBox(height: defaultPadding),
           AlreadyHaveAnAccountCheck(
             press: () {
+              clearTextFields();
               Navigator.push(
                 context,
                 MaterialPageRoute(

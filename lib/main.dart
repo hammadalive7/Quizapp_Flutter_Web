@@ -13,6 +13,7 @@ import 'Screens/Welcome/welcome_screen.dart';
 import 'core/controller/login_controller.dart';
 import 'core/controller/profile_controller.dart';
 import 'core/controller/signup_controller.dart';
+import 'core/controller/usercheck_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ Future<void> main() async {
   Get
     ..put(LoginController())
     ..put(SignUpController())
+    ..put(UserCheckController())
     ..put(ProfileController());
 
   SharedPreferences prefs = await SharedPreferences.getInstance();

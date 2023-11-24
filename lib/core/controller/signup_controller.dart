@@ -40,8 +40,6 @@ class SignUpController extends GetxController {
 
         Get.snackbar("Successful", "User Registration Successful", duration: const Duration(seconds: 2));
 
-        final prefs = await SharedPreferences.getInstance();
-
       UserModel user = UserModel(
         name: name,
         email: email,

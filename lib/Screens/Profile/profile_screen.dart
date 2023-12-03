@@ -29,9 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        leading: IconButton(
-            onPressed: () => Get.offAllNamed('/HomeScreen'),
-            icon: const Icon(Icons.arrow_back_ios_new)),
+
         title:
          Text("Profile", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white))
       ),

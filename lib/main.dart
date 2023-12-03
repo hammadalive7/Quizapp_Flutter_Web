@@ -8,10 +8,15 @@ import 'package:quizapp/constants.dart';
 import 'package:quizapp/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Screens/Admin/admin_quiz_screen.dart';
+import 'Screens/Admin/make_quiz.dart';
 import 'Screens/Profile/profile_screen.dart';
+import 'Screens/Quiz/screens/quizz_screen.dart';
+import 'Screens/Quiz/screens/result_screen.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'core/controller/login_controller.dart';
 import 'core/controller/profile_controller.dart';
+import 'core/controller/quiz_controller.dart';
 import 'core/controller/signup_controller.dart';
 import 'core/controller/usercheck_controller.dart';
 
@@ -36,6 +41,7 @@ Future<void> main() async {
     ..put(LoginController())
     ..put(SignUpController())
     ..put(UserCheckController())
+    ..put(QuizController())
     ..put(ProfileController());
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,6 +75,10 @@ class MyApp extends StatelessWidget {
         '/HomeScreen': (context) => const HomeScreen(),
         '/WelcomeScreen': (context) => const WelcomeScreen(),
         '/ProfileScreen': (context) => const ProfileScreen(),
+        '/QuizzScreen': (context) =>  QuizzScreen(code: 1,),
+        '/AdminQuizScreen': (context) => const AdminQuizScreen(),
+        '/QuizBuilderScreen': (context) =>  QuizBuilderScreen( numberOfQuestions: 1, quizName: 'test', quizCode: 1),
+        '/ResultScreen': (context) =>  ResultScreen(0),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Auth',

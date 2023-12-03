@@ -2,10 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:quizapp/core/controller/profile_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../constants.dart';
+import '../../core/controller/quiz_controller.dart';
 import '../../core/controller/usercheck_controller.dart';
+import '../Admin/admin_quiz_screen.dart';
+import '../Quiz/screens/quizz_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -18,20 +21,22 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late UserCheckController userController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _textFieldController = TextEditingController();
+  TextEditingController _CodeController = TextEditingController();
+  late QuizController quizController;
 
   @override
   void initState() {
     super.initState();
     userController = Get.put(UserCheckController());
+    quizController = Get.put(QuizController());
   }
 
-  void signOut() async {
-    await FirebaseAuth.instance.signOut();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isLoggedIn', false);
-    Navigator.pushNamed(context, '/LoginScreen');
-  }
+  // void signOut() async {
+  //   await FirebaseAuth.instance.signOut();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('isLoggedIn', false);
+  //   Navigator.pushNamed(context, '/LoginScreen');
+  // }
 
   void _showDialog() {
     showDialog(
@@ -54,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 return null;
               },
-              controller: _textFieldController,
+              controller: _CodeController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
@@ -72,9 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: kPrimaryColor,
               ),
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     // Get.offNamed('/QuizScreen');
+                    Get.offAll(() => QuizzScreen(code: int.parse(_CodeController.text),));
+
                   }
                 },
                 child: const Text("Submit", style: TextStyle(color: Colors.white)),
@@ -107,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               onPressed: () {
-                Get.offNamed('/ProfileScreen');
+                Get.toNamed('/ProfileScreen');
               },
               icon: const Icon(Icons.person),
             ),
@@ -146,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: InkWell(
             onTap: () {
               // Handle admin card tap
+              Get.toNamed('/AdminQuizScreen');
             },
             splashColor: kPrimaryColor,
             child: Card(
@@ -191,7 +199,9 @@ class _HomeScreenState extends State<HomeScreen> {
           width: 600,
           child: InkWell(
             onTap: () {
+
               _showDialog();
+
             },
             splashColor: kPrimaryColor,
             child: Card(

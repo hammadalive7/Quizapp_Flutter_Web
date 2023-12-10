@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Row(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 300,
                     height: 300,
                     child: Row(

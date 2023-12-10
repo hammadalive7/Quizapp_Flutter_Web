@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quizapp/Screens/DashBoard/home_screen.dart';
+import 'package:quizapp/Screens/Login/login_screen.dart';
 import 'package:quizapp/Screens/Quiz/model/question_model.dart';
 import 'package:quizapp/Screens/Quiz/screens/result_screen.dart';
 import '../../../core/controller/quiz_controller.dart';
@@ -39,7 +41,11 @@ class _QuizzScreenState extends State<QuizzScreen> {
           icon: const Icon(Icons.home),
           color: Colors.white,
           onPressed: () {
-            Get.offAll(() => const HomeScreen());
+            if (FirebaseAuth.instance.currentUser != null) {
+              Get.offAll(() => const HomeScreen());
+            } else {
+              Get.offAll(() => const LoginScreen());
+            }
           },
         ),
         title: const Text("QUIZ QUESTIONS"),
@@ -55,7 +61,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
           child: FutureBuilder(
             future: quizController.getQuestionsFromFirestore(widget.code),
             builder: (context, AsyncSnapshot<List<QuestionModel>> snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.data == null || snapshot.data!.isEmpty) {
@@ -95,8 +101,11 @@ class _QuizzScreenState extends State<QuizzScreen> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Get.offAll(() => const HomeScreen());
-                          },
+                            if (FirebaseAuth.instance.currentUser != null) {
+                              Get.offAll(() => const HomeScreen());
+                            } else {
+                              Get.offAll(() => const LoginScreen());
+                            }                          },
                           child: const Text("Back to Home Page",
                               style: TextStyle(color: Colors.white)),
                         ),
@@ -107,125 +116,126 @@ class _QuizzScreenState extends State<QuizzScreen> {
               }
               List<QuestionModel> questions = snapshot.data!;
               return Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: PageView.builder(
-                      controller: _controller!,
-                      onPageChanged: (page) {
-                        if (page == questions.length - 1) {
-                            btnText.value = "See Results";
-                        }
-                          answered.value = false;
-                      },
-                      physics: new NeverScrollableScrollPhysics(),
-                      itemCount: questions.length,
-                      itemBuilder: (context, index) {
-                        return  Obx(
-                                () => Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              child: Text(
-                                "Question ${index + 1}/${questions.length}",
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28.0,
-                                ),
-                              ),
-                            ),
-                            const Divider(
-                              color: Colors.white,
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 200.0,
-                              child: Text(
-                                "${questions[index].question}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            for (int i = 0;
-                                i < questions[index].answers!.length;
-                                i++)
-                              Container(
+                  padding: const EdgeInsets.all(18.0),
+                  child: PageView.builder(
+                    controller: _controller!,
+                    onPageChanged: (page) {
+                      if (page == questions.length - 1) {
+                        btnText.value = "See Results";
+                      }
+                      answered.value = false;
+                    },
+                    physics: new NeverScrollableScrollPhysics(),
+                    itemCount: questions.length,
+                    itemBuilder: (context, index) {
+                      return Obx(() => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
                                 width: double.infinity,
-                                height: 50.0,
-                                margin: const EdgeInsets.only(
-                                    bottom: 20.0, left: 12.0, right: 12.0),
-                                child: RawMaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
+                                child: Text(
+                                  "Question ${index + 1}/${questions.length}",
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28.0,
                                   ),
-                                  fillColor: btnPressed.value
-                                      ? questions[index]
-                                              .answers!
-                                              .values
-                                              .toList()[i]
-                                          ? Colors.green
-                                          : Colors.red
-                                      : AppColor.secondaryColor,
-                                  onPressed: !answered.value
-                                      ? () {
-                                          if (questions[index]
-                                              .answers!
-                                              .values
-                                              .toList()[i]) {
-                                            score++;
-                                            print("yes");
-                                          } else {
-                                            print("no");
-                                          }
+                                ),
+                              ),
+                              const Divider(
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 200.0,
+                                child: Text(
+                                  "${questions[index].question}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.0,
+                                  ),
+                                ),
+                              ),
+                              for (int i = 0;
+                                  i < questions[index].answers!.length;
+                                  i++)
+                                Container(
+                                  width: double.infinity,
+                                  height: 50.0,
+                                  margin: const EdgeInsets.only(
+                                      bottom: 20.0, left: 12.0, right: 12.0),
+                                  child: RawMaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    fillColor: btnPressed.value
+                                        ? questions[index]
+                                                .answers!
+                                                .values
+                                                .toList()[i]
+                                            ? Colors.green
+                                            : Colors.red
+                                        : AppColor.secondaryColor,
+                                    onPressed: !answered.value
+                                        ? () {
+                                            if (questions[index]
+                                                .answers!
+                                                .values
+                                                .toList()[i]) {
+                                              score++;
+                                              print("yes");
+                                            } else {
+                                              print("no");
+                                            }
                                             btnPressed.value = true;
                                             answered.value = true;
-                                        }
-                                      : null,
-                                  child: Text(
-                                      questions[index].answers!.keys.toList()[i],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
-                                      )),
+                                          }
+                                        : null,
+                                    child: Text(
+                                        questions[index]
+                                            .answers!
+                                            .keys
+                                            .toList()[i],
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                        )),
+                                  ),
                                 ),
+                              const SizedBox(
+                                height: 40.0,
                               ),
-                            const SizedBox(
-                              height: 40.0,
-                            ),
-                            RawMaterialButton(
-                              onPressed: () {
-                                if (_controller!.page?.toInt() ==
-                                    questions.length - 1) {
-                                  Get.offAll(ResultScreen(score));
-                                } else {
-                                  _controller!.nextPage(
-                                      duration: const Duration(milliseconds: 250),
-                                      curve: Curves.easeInExpo);
+                              RawMaterialButton(
+                                onPressed: () {
+                                  if (_controller!.page?.toInt() ==
+                                      questions.length - 1) {
+                                    Get.offAll(ResultScreen(score));
+                                  } else {
+                                    _controller!.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 250),
+                                        curve: Curves.easeInExpo);
 
                                     btnPressed.value = false;
-                                }
-                              },
-                              shape: const StadiumBorder(),
-                              fillColor: Colors.purple,
-                              padding: const EdgeInsets.all(18.0),
-                              elevation: 0.0,
-                              child: Text(
-                                btnText.value,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            )
-                          ],
-                        )
-                        );
-                      },
-                    )
-              );
+                                  }
+                                },
+                                shape: const StadiumBorder(),
+                                fillColor: Colors.purple,
+                                padding: const EdgeInsets.all(18.0),
+                                elevation: 0.0,
+                                child: Text(
+                                  btnText.value,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              )
+                            ],
+                          ));
+                    },
+                  ));
             },
           ),
         ),

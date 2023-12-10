@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Login/login_screen.dart';
 import '../ui/shared/color.dart';
 
 
@@ -19,7 +21,11 @@ class _ResultScreenState extends State<ResultScreen> {
       appBar: AppBar(
 
         leading: IconButton(icon: Icon(Icons.home), color: Colors.white, onPressed: (){
-          Get.offAllNamed('/HomeScreen');
+          if (FirebaseAuth.instance.currentUser != null) {
+            Get.offAllNamed('/HomeScreen');
+          } else {
+            Get.offAll(() => const LoginScreen());
+          }
         },),
         title: const Text("Quiz Result"),
         actions: [
@@ -27,7 +33,11 @@ class _ResultScreenState extends State<ResultScreen> {
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               onPressed: () {
-                Get.toNamed('/ProfileScreen');
+                if (FirebaseAuth.instance.currentUser != null) {
+                  Get.toNamed('/ProfileScreen');
+                } else {
+                  Get.offAll(() => const LoginScreen());
+                }
               },
               icon: const Icon(Icons.person),
             ),
@@ -80,12 +90,15 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.offAllNamed('/HomeScreen');
-                },
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    Get.offAllNamed('/HomeScreen');
+                  } else {
+                    Get.offAll(() => const LoginScreen());
+                  }                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.secondaryColor,
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.all(18.0),
+                  shape: const StadiumBorder(),
+                  padding: const EdgeInsets.all(18.0),
 
                 ),
 
